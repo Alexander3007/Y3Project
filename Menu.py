@@ -1,14 +1,15 @@
+import urllib.request
+
 import pygame
 import pygame_menu
-from pygame_menu import sound
-import pandas as pd
-import random
-import urllib.request
-from Card import Card
+
 from Game import Game
 
 
 def start_the_game():
+    """
+    Method to start a new game from the main menu and run the main game loop.
+    """
     game_instance = Game(X, Y, menu)
     # game loop
     while True:
@@ -16,6 +17,9 @@ def start_the_game():
 
 
 def learn_more():
+    """
+    Method that will bring the user to a page where they can learn more about fake news.
+    """
     request_url = urllib.request.urlopen(
         'https://docs.google.com/document/d/1BzQ7PH07unRiIMSIndmfJ2Iu9IIXOHgIvytI7JvgxHw/edit#heading=h.hwpaayxhxfw')
     print(request_url.read())
@@ -43,7 +47,7 @@ if __name__ == '__main__':
     menu.add.text_input('Name:', default='John Doe')
 
     menu.add.button('Play', start_the_game)
-    menu.add.button('Learn more', learn_more)
+    menu.add.button('Learn more!', learn_more)
     menu.add.button('Quit', pygame_menu.events.EXIT)
 
     menu.mainloop(surface)

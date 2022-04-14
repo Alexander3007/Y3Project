@@ -1,11 +1,19 @@
 import pygame
 
-# Global Variables
-white = (255, 255, 255)
-
 
 class Card(pygame.sprite.Sprite):
-    def __init__(self, display_width, display_height, ID, money_change, happiness_change, opposition_change, army_change):
+    def __init__(self, display_width, display_height, ID, money_change, happiness_change, opposition_change,
+                 army_change):
+        """
+        Initialization function for the cards, called when all the cards are created before the game starts.
+        :param display_width: Game screen width
+        :param display_height: Game screen height
+        :param ID: Card unique identifier number
+        :param money_change: Card's money level modifier
+        :param happiness_change: Card's happiness level modifier
+        :param opposition_change: Card's opposition level modifier
+        :param army_change: Card's army level modifier
+        """
         super().__init__()
 
         # Set dimensions for the card
@@ -20,9 +28,17 @@ class Card(pygame.sprite.Sprite):
         self.image = pygame.image.load(r'images/Cards/Card' + str(self.ID) + '.png')
 
         self.rect = self.image.get_rect()
-        self.rect.center = (display_width/2, display_height/2)
+        self.rect.center = (display_width / 2, display_height / 2)
 
     def support_action(self, factor_money, factor_happiness, factor_opposition, factor_army):
+        """
+        Method called whenever a player selects the support action for a card
+        :param factor_money: Value representing money level
+        :param factor_happiness: Value representing happiness level
+        :param factor_opposition: Value representing opposition level
+        :param factor_army: Value representing army level
+        :return: updated values for all factors
+        """
         factor_money += self.money_change
         factor_happiness += self.happiness_change
         factor_opposition += self.opposition_change
@@ -30,6 +46,14 @@ class Card(pygame.sprite.Sprite):
         return factor_money, factor_happiness, factor_opposition, factor_army
 
     def denounce_action(self, factor_money, factor_happiness, factor_opposition, factor_army):
+        """
+        Method called whenever a player selects the denounce action for a card
+        :param factor_money: Value representing money level
+        :param factor_happiness: Value representing happiness level
+        :param factor_opposition: Value representing opposition level
+        :param factor_army: Value representing army level
+        :return: updated values for all factors
+        """
         factor_money -= self.money_change
         factor_happiness -= self.happiness_change
         factor_opposition -= self.opposition_change

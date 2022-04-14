@@ -2,6 +2,7 @@ import random
 import pandas as pd
 import pygame
 from Card import Card
+import time
 
 
 class Game:
@@ -60,7 +61,8 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Denounce Action
-                if (screen_width / 2) - (screen_width / 4) <= mouse[0] <= (screen_width / 2) - (screen_width / 4) + 175 and screen_height - 50 <= mouse[1] <= screen_height - 50 + 40:
+                if (screen_width / 2) - (screen_width / 4) <= mouse[0] <= (screen_width / 2) - (
+                        screen_width / 4) + 175 and screen_height - 50 <= mouse[1] <= screen_height - 50 + 40:
                     self.factor_money, self.factor_happiness, self.factor_opposition, self.factor_army = \
                         card.denounce_action(
                             self.factor_money,
@@ -70,8 +72,9 @@ class Game:
                     self.card_iterator += 1
 
                 # Support Action
-                if (screen_width / 2) + (screen_width / 4) - 200 <= mouse[0] <= (screen_width / 2) + (screen_width / 4) - 200 + 175 and \
-                                    screen_height - 50 <= mouse[1] <= screen_height - 50 + 40:
+                if (screen_width / 2) + (screen_width / 4) - 200 <= mouse[0] <= (screen_width / 2) + (
+                        screen_width / 4) - 200 + 175 and \
+                        screen_height - 50 <= mouse[1] <= screen_height - 50 + 40:
                     self.factor_money, self.factor_happiness, self.factor_opposition, self.factor_army = \
                         card.support_action(
                             self.factor_money,
@@ -94,7 +97,7 @@ class Game:
             card.update()
             pygame.display.update()
 
-            self.check_game_over()
+            self.check_game_over(screen_width, screen_height)
 
     def draw_game_objects(self, card, screen_width, screen_height):
         """
@@ -106,6 +109,7 @@ class Game:
         white = (255, 255, 255)
         green = (0, 255, 0)
         blue = (0, 0, 128)
+        red = (255, 0, 0)
 
         # Fonts!
         button_font = pygame.font.SysFont('Corbel', 32)
@@ -136,49 +140,115 @@ class Game:
 
         # Button Displayable
         # Support button
-        pygame.draw.rect(self.display_surface, color_dark, [(screen_width / 2) + (screen_width / 4) - 200, screen_height - 50, 175, 40])
+        pygame.draw.rect(self.display_surface, color_dark,
+                         [(screen_width / 2) + (screen_width / 4) - 200, screen_height - 50, 175, 40])
 
         text = button_font.render('SUPPORT', True, color_light)
         self.display_surface.blit(text, ((screen_width / 2) + (screen_width / 4) - 175 - 1, screen_height - 50 + 5))
 
         # Denounce Button
-        pygame.draw.rect(self.display_surface, color_dark, [(screen_width / 2) - (screen_width / 4), screen_height - 50, 175, 40])
+        pygame.draw.rect(self.display_surface, color_dark,
+                         [(screen_width / 2) - (screen_width / 4), screen_height - 50, 175, 40])
 
         text = button_font.render('DENOUNCE', True, color_light)
         self.display_surface.blit(text, ((screen_width / 2) - (screen_width / 4) + 10, screen_height - 50 + 5))
 
-    def check_game_over(self):
+    def check_game_over(self, screen_width, screen_height):
         """
         Method to check for different game over conditions.
         """
         # Here we will check game over conditions
+        white = (255, 255, 255)
+        green = (0, 255, 0)
+        blue = (0, 0, 128)
+        red = (255, 0, 0)
+
+        # Fonts!
+        button_font = pygame.font.SysFont('Corbel', 32)
+
+        color_dark = (100, 100, 100)
+        color_light = (170, 170, 170)
 
         if self.factor_money < 0:
-            self.menu.mainloop(self.display_surface)
+            self.activate_game_over("You have wasted away the entire country's funds and are forced to declare "
+                                    "bankruptcy. You are removed by a vote of no confidence.",
+                                    screen_width,
+                                    screen_height)
 
         if self.factor_money > 100:
-            self.menu.mainloop(self.display_surface)
+            self.activate_game_over("Your immense wealth has led to accusations of corruption, you are removed from "
+                                    "office by your own party.",
+                                    screen_width,
+                                    screen_height)
 
         if self.factor_army < 0:
-            self.menu.mainloop(self.display_surface)
+            self.activate_game_over("The army became too weak and you were assassinated by foreign powers...",
+                                    screen_width,
+                                    screen_height)
 
         if self.factor_army > 100:
-            self.menu.mainloop(self.display_surface)
+            self.activate_game_over("The army became too strong and a coup d'etat occurred, removing you from power.",
+                                    screen_width,
+                                    screen_height)
 
         if self.factor_opposition < 0:
-            self.menu.mainloop(self.display_surface)
+            self.activate_game_over("Declared dictator-for-life, it does not take long until you are poisoned by an "
+                                    "ambitious follower...",
+                                    screen_width,
+                                    screen_height)
 
         if self.factor_opposition > 100:
-            self.menu.mainloop(self.display_surface)
+            self.activate_game_over("The opposition became too strong and called a vote of no confidence, removing "
+                                    "you from power",
+                                    screen_width,
+                                    screen_height)
 
         if self.factor_happiness < 0:
-            self.menu.mainloop(self.display_surface)
+            self.activate_game_over("Your people hate you and have risen up in a general revolution, quickly removing "
+                                    "you from your position... and your head!",
+                                    screen_width,
+                                    screen_height)
 
         if self.factor_happiness > 100:
-            self.menu.mainloop(self.display_surface)
+            self.activate_game_over("The people are overjoyed! Unfortunately, this means that no one actually gets "
+                                    "anything done anymore. Your country fails due to a lack in productivity.",
+                                    screen_width,
+                                    screen_height)
 
         # Check if card maximum has been reached
         if self.card_iterator > self.card_number - 2:
             # here we can do end-of-game things!
             # i.e. election time!
+            self.display_surface.fill(blue)
+            pygame.display.update()
+            time.sleep(5)
             self.menu.mainloop(self.display_surface)
+
+    def activate_game_over(self, text, screen_width, screen_height):
+        red = (255, 0, 0)
+        black = (255, 255, 255)
+        self.display_surface.fill(red)
+        big_font = pygame.font.SysFont('Corbel', 40)
+        font = pygame.font.SysFont('Corbel', 22)
+
+        # create a text surface object,
+        # on which text is drawn on it.
+
+        game_over_text = big_font.render("GAME OVER", True, black)
+        text = font.render(text, True, black)
+
+        # create a rectangular object for the
+        # text surface object
+        GO_rect = game_over_text.get_rect()
+        text_rect = text.get_rect()
+
+        # set the center of the rectangular object.
+        GO_rect.center = (screen_width // 2, (screen_height // 2) - 100)
+        text_rect.center = (screen_width // 2, screen_height // 2)
+
+        self.display_surface.blit(game_over_text, GO_rect)
+        self.display_surface.blit(text, text_rect)
+
+        pygame.display.update()
+        time.sleep(5)
+        self.menu.mainloop(self.display_surface)

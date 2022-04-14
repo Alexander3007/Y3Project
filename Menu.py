@@ -15,11 +15,13 @@ def start_the_game():
     green = (0, 255, 0)
     blue = (0, 0, 128)
 
+    # Set initial values for factors
     factor_money = 50
     factor_happiness = 50
     factor_opposition = 50
     factor_army = 50
 
+    # Fonts!
     button_font = pygame.font.SysFont('Corbel', 32)
 
     # create the display surface object
@@ -35,7 +37,7 @@ def start_the_game():
     # Import card data from excel file
     card_data = pd.read_excel(r'card_data.xlsx', engine='openpyxl')
 
-    data = pd.DataFrame(card_data, columns=['ID', 'money', 'happiness', 'opposition', 'army'])
+    data = pd.DataFrame(card_data, columns=['ID', 'money', 'happiness', 'opposition', 'army', 'fake'])
 
     for i, j in data.iterrows():
         all_cards.append(Card(X, Y, j[0], j[1], j[2], j[3], j[4]))
@@ -120,6 +122,30 @@ def start_the_game():
             pygame.display.update()
 
             # Here we will check gameover conditions
+
+            if factor_money < 0:
+                menu.mainloop(display_surface)
+
+            if factor_money > 100:
+                menu.mainloop(display_surface)
+
+            if factor_army < 0:
+                menu.mainloop(display_surface)
+
+            if factor_army > 100:
+                menu.mainloop(display_surface)
+
+            if factor_opposition < 0:
+                menu.mainloop(display_surface)
+
+            if factor_opposition > 100:
+                menu.mainloop(display_surface)
+
+            if factor_happiness < 0:
+                menu.mainloop(display_surface)
+
+            if factor_happiness > 100:
+                menu.mainloop(display_surface)
 
             # Check if card maximum has been reached
             if card_iterator > card_number - 2:

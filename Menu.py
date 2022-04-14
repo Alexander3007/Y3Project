@@ -93,8 +93,9 @@ def start_the_game():
 
 
 def learn_more():
-    #For Later
-    pass
+    request_url = urllib.request.urlopen(
+        'https://docs.google.com/document/d/1BzQ7PH07unRiIMSIndmfJ2Iu9IIXOHgIvytI7JvgxHw/edit#heading=h.hwpaayxhxfw')
+    print(request_url.read())
 
 
 if __name__ == '__main__':

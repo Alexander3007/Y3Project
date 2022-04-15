@@ -41,7 +41,7 @@ class Game:
         data = pd.DataFrame(card_data, columns=['ID', 'money', 'happiness', 'opposition', 'army', 'fake'])
 
         for i, j in data.iterrows():
-            self.all_cards.append(Card(screen_width, screen_height, j[0], j[1], j[2], j[3], j[4]))
+            self.all_cards.append(Card(screen_width, screen_height, j[0], j[1], j[2], j[3], j[4], j[5]))
 
         self.card_number = len(self.all_cards)
 
@@ -273,28 +273,58 @@ class Game:
         big_font = pygame.font.SysFont('Corbel', 40)
         font = pygame.font.SysFont('Corbel', 18)
 
-        # create a text surface object,
-        # on which text is drawn on it.
+        if self.factor_opposition < 50:
 
-        game_over_text = big_font.render("Election Time!", True, white)
-        text = font.render("You have successfully completed a term in office. "
-                           "Play again?", True, white)
+            # create a text surface object,
+            # on which text is drawn on it.
 
-        # create a rectangular object for the
-        # text surface object
-        GO_rect = game_over_text.get_rect()
-        text_rect = text.get_rect()
+            game_over_text = big_font.render("Election Time!", True, white)
+            text = font.render("You have successfully completed a term in office, "
+                               "and are popular enough to be voted back in!", True, white)
 
-        # set the center of the rectangular object.
-        GO_rect.center = (screen_width // 2, (screen_height // 2) - 100)
-        text_rect.center = (screen_width // 2, screen_height // 2)
+            # create a rectangular object for the
+            # text surface object
+            GO_rect = game_over_text.get_rect()
+            text_rect = text.get_rect()
 
-        self.display_surface.blit(game_over_text, GO_rect)
-        self.display_surface.blit(text, text_rect)
+            # set the center of the rectangular object.
+            GO_rect.center = (screen_width // 2, (screen_height // 2) - 100)
+            text_rect.center = (screen_width // 2, screen_height // 2)
 
-        pygame.display.update()
-        time.sleep(4)
-        self.menu.mainloop(self.display_surface)
+            self.display_surface.blit(game_over_text, GO_rect)
+            self.display_surface.blit(text, text_rect)
+
+            pygame.display.update()
+            time.sleep(4)
+
+            #Start a new game
+            game_instance = Game(screen_width, screen_height, self.menu)
+            # game loop
+            while True:
+                game_instance.game_loop(screen_width, screen_height)
+        else:
+            # create a text surface object,
+            # on which text is drawn on it.
+
+            game_over_text = big_font.render("GAME OVER", True, white)
+            text = font.render("You have successfully completed a term in office! "
+                               "Unfortunately, you lost the re-elections...", True, white)
+
+            # create a rectangular object for the
+            # text surface object
+            GO_rect = game_over_text.get_rect()
+            text_rect = text.get_rect()
+
+            # set the center of the rectangular object.
+            GO_rect.center = (screen_width // 2, (screen_height // 2) - 100)
+            text_rect.center = (screen_width // 2, screen_height // 2)
+
+            self.display_surface.blit(game_over_text, GO_rect)
+            self.display_surface.blit(text, text_rect)
+
+            pygame.display.update()
+            time.sleep(4)
+            self.menu.mainloop(self.display_surface)
 
     def fadeout(self, screen_width, screen_height, colour):
         """

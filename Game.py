@@ -94,6 +94,8 @@ class Game:
                 pygame.quit()
                 # quit the program.
                 quit()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.menu.mainloop(self.display_surface)
 
             # Draws the surface object to the screen.
 
@@ -158,16 +160,6 @@ class Game:
         Method to check for different game over conditions.
         """
         # Here we will check game over conditions
-        white = (255, 255, 255)
-        green = (0, 255, 0)
-        blue = (0, 0, 128)
-        red = (255, 0, 0)
-
-        # Fonts!
-        button_font = pygame.font.SysFont('Corbel', 32)
-
-        color_dark = (100, 100, 100)
-        color_light = (170, 170, 170)
 
         if self.factor_money < 0:
             self.activate_game_over("You have wasted away the entire country's funds and are forced to declare "
@@ -243,14 +235,14 @@ class Game:
 
         # create a rectangular object for the
         # text surface object
-        GO_rect = game_over_text.get_rect()
+        go_rect = game_over_text.get_rect()
         text_rect = text.get_rect()
 
         # set the center of the rectangular object.
-        GO_rect.center = (screen_width // 2, (screen_height // 2) - 100)
+        go_rect.center = (screen_width // 2, (screen_height // 2) - 100)
         text_rect.center = (screen_width // 2, screen_height // 2)
 
-        self.display_surface.blit(game_over_text, GO_rect)
+        self.display_surface.blit(game_over_text, go_rect)
         self.display_surface.blit(text, text_rect)
 
         pygame.display.update()
@@ -278,26 +270,26 @@ class Game:
             # create a text surface object,
             # on which text is drawn on it.
 
-            game_over_text = big_font.render("Election Time!", True, white)
+            election_text = big_font.render("Election Time!", True, white)
             text = font.render("You have successfully completed a term in office, "
                                "and are popular enough to be voted back in!", True, white)
 
             # create a rectangular object for the
             # text surface object
-            GO_rect = game_over_text.get_rect()
+            election_rect = election_text.get_rect()
             text_rect = text.get_rect()
 
             # set the center of the rectangular object.
-            GO_rect.center = (screen_width // 2, (screen_height // 2) - 100)
+            election_rect.center = (screen_width // 2, (screen_height // 2) - 100)
             text_rect.center = (screen_width // 2, screen_height // 2)
 
-            self.display_surface.blit(game_over_text, GO_rect)
+            self.display_surface.blit(election_text, election_rect)
             self.display_surface.blit(text, text_rect)
 
             pygame.display.update()
             time.sleep(4)
 
-            #Start a new game
+            # Start a new game
             game_instance = Game(screen_width, screen_height, self.menu)
             # game loop
             while True:
@@ -306,20 +298,20 @@ class Game:
             # create a text surface object,
             # on which text is drawn on it.
 
-            game_over_text = big_font.render("GAME OVER", True, white)
+            election_text = big_font.render("GAME OVER", True, white)
             text = font.render("You have successfully completed a term in office! "
                                "Unfortunately, you lost the re-elections...", True, white)
 
             # create a rectangular object for the
             # text surface object
-            GO_rect = game_over_text.get_rect()
+            election_rect = election_text.get_rect()
             text_rect = text.get_rect()
 
             # set the center of the rectangular object.
-            GO_rect.center = (screen_width // 2, (screen_height // 2) - 100)
+            election_rect.center = (screen_width // 2, (screen_height // 2) - 100)
             text_rect.center = (screen_width // 2, screen_height // 2)
 
-            self.display_surface.blit(game_over_text, GO_rect)
+            self.display_surface.blit(election_text, election_rect)
             self.display_surface.blit(text, text_rect)
 
             pygame.display.update()

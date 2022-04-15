@@ -30,7 +30,7 @@ class Game:
         # set the pygame window name
         pygame.display.set_caption('The Game')
 
-        self.fadeout(screen_width, screen_height, white)
+        self.loading_screen_fadeout(screen_width, screen_height, white)
 
         # Set the cards up!
         self.all_cards = []
@@ -110,9 +110,6 @@ class Game:
         :param screen_height: Game Screen Height
         """
         white = (255, 255, 255)
-        green = (0, 255, 0)
-        blue = (0, 0, 128)
-        red = (255, 0, 0)
 
         # Fonts!
         button_font = pygame.font.SysFont('Corbel', 32)
@@ -220,15 +217,16 @@ class Game:
 
         # Check if card maximum has been reached
         if self.card_iterator > self.card_number - 2:
-            # here we can do end-of-game things!
-            # i.e. election time!
-            self.fadeout(screen_width, screen_height, blue)
-            self.display_surface.fill(blue)
-            pygame.display.update()
-            time.sleep(5)
-            self.menu.mainloop(self.display_surface)
+            self.election_time(screen_width, screen_height)
 
     def activate_game_over(self, text, screen_width, screen_height):
+        """
+        Method to end the game and display the game over screen to the player, alongside displaying
+        the reason why they lost.
+        :param text: Game Over explanation text
+        :param screen_width: Game screen width
+        :param screen_height: Game screen height
+        """
         red = (255, 0, 0)
         white = (255, 255, 255)
         self.fadeout(screen_width, screen_height, red)
@@ -256,15 +254,88 @@ class Game:
         self.display_surface.blit(text, text_rect)
 
         pygame.display.update()
-        time.sleep(2.5)
+        time.sleep(4)
+        self.menu.mainloop(self.display_surface)
+
+    def election_time(self, screen_width, screen_height):
+        """
+        Method for handling what happens if a player completes the game without losing.
+        :param screen_width: Game screen width
+        :param screen_height: Game screen height
+        """
+        blue = (0, 0, 128)
+        white = (255, 255, 255)
+        # here we can do end-of-game things!
+        # i.e. election time!
+        self.fadeout(screen_width, screen_height, blue)
+        self.display_surface.fill(blue)
+
+        big_font = pygame.font.SysFont('Corbel', 40)
+        font = pygame.font.SysFont('Corbel', 18)
+
+        # create a text surface object,
+        # on which text is drawn on it.
+
+        game_over_text = big_font.render("Election Time!", True, white)
+        text = font.render("You have successfully completed a term in office. "
+                           "Play again?", True, white)
+
+        # create a rectangular object for the
+        # text surface object
+        GO_rect = game_over_text.get_rect()
+        text_rect = text.get_rect()
+
+        # set the center of the rectangular object.
+        GO_rect.center = (screen_width // 2, (screen_height // 2) - 100)
+        text_rect.center = (screen_width // 2, screen_height // 2)
+
+        self.display_surface.blit(game_over_text, GO_rect)
+        self.display_surface.blit(text, text_rect)
+
+        pygame.display.update()
+        time.sleep(4)
         self.menu.mainloop(self.display_surface)
 
     def fadeout(self, screen_width, screen_height, colour):
+        """
+        Utility function that allows the game to fade out to a certain screen colour.
+        :param screen_width: Game screen width
+        :param screen_height: Game screen height
+        :param colour: Colour to fade out to
+        """
         fadeout = pygame.Surface((screen_width, screen_height))
         fadeout = fadeout.convert()
         fadeout.fill(colour)
         for i in range(255):
             fadeout.set_alpha(i)
             self.display_surface.blit(fadeout, (0, 0))
+            pygame.display.update()
+            time.sleep(0.005)
+
+    def loading_screen_fadeout(self, screen_width, screen_height, colour):
+        """
+        Similar to the general fadeout method, but used specifically for loading screens.
+        :param screen_width: Game screen width
+        :param screen_height: Game screen height
+        :param colour: Colour to fade out to
+        """
+        fadeout = pygame.Surface((screen_width, screen_height))
+        fadeout = fadeout.convert()
+        fadeout.fill(colour)
+        black = (0, 0, 0)
+        for i in range(255):
+            fadeout.set_alpha(i)
+            self.display_surface.blit(fadeout, (0, 0))
+
+            font = pygame.font.SysFont('Corbel', 18)
+            text = font.render("Loading...", True, black)
+
+            # create a rectangular object for the
+            # text surface object
+            text_rect = text.get_rect()
+            text_rect.center = (screen_width // 2, screen_height // 2)
+
+            fadeout.blit(text, text_rect)
+
             pygame.display.update()
             time.sleep(0.005)

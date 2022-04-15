@@ -15,6 +15,7 @@ class Game:
         """
         self.menu = menu
         self.card_iterator = 0
+        white = (255, 255, 255)
 
         # Set initial values for factors
         self.factor_money = 50
@@ -28,6 +29,8 @@ class Game:
 
         # set the pygame window name
         pygame.display.set_caption('The Game')
+
+        self.fadeout(screen_width, screen_height, white)
 
         # Set the cards up!
         self.all_cards = []
@@ -219,6 +222,7 @@ class Game:
         if self.card_iterator > self.card_number - 2:
             # here we can do end-of-game things!
             # i.e. election time!
+            self.fadeout(screen_width, screen_height, blue)
             self.display_surface.fill(blue)
             pygame.display.update()
             time.sleep(5)
@@ -226,16 +230,18 @@ class Game:
 
     def activate_game_over(self, text, screen_width, screen_height):
         red = (255, 0, 0)
-        black = (255, 255, 255)
+        white = (255, 255, 255)
+        self.fadeout(screen_width, screen_height, red)
         self.display_surface.fill(red)
+        pygame.display.update()
         big_font = pygame.font.SysFont('Corbel', 40)
-        font = pygame.font.SysFont('Corbel', 22)
+        font = pygame.font.SysFont('Corbel', 18)
 
         # create a text surface object,
         # on which text is drawn on it.
 
-        game_over_text = big_font.render("GAME OVER", True, black)
-        text = font.render(text, True, black)
+        game_over_text = big_font.render("GAME OVER", True, white)
+        text = font.render(text, True, white)
 
         # create a rectangular object for the
         # text surface object
@@ -250,5 +256,15 @@ class Game:
         self.display_surface.blit(text, text_rect)
 
         pygame.display.update()
-        time.sleep(5)
+        time.sleep(2.5)
         self.menu.mainloop(self.display_surface)
+
+    def fadeout(self, screen_width, screen_height, colour):
+        fadeout = pygame.Surface((screen_width, screen_height))
+        fadeout = fadeout.convert()
+        fadeout.fill(colour)
+        for i in range(255):
+            fadeout.set_alpha(i)
+            self.display_surface.blit(fadeout, (0, 0))
+            pygame.display.update()
+            time.sleep(0.005)

@@ -1,4 +1,5 @@
 import pygame
+from Utility import resource_path
 
 
 class Card(pygame.sprite.Sprite):
@@ -26,7 +27,8 @@ class Card(pygame.sprite.Sprite):
         self.is_fake = is_fake
 
         # Load the image
-        self.image = pygame.image.load(r'images/Cards/Card' + str(self.ID) + '.png')
+        image_asset = resource_path(r'images/Cards/Card' + str(self.ID) + '.png')
+        self.image = pygame.image.load(image_asset)
 
         self.rect = self.image.get_rect()
         self.rect.center = (display_width / 2, display_height / 2)

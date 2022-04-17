@@ -62,9 +62,9 @@ class Card(pygame.sprite.Sprite):
         :param factor_army: Value representing army level
         :return: updated values for all factors
         """
-        if self.is_fake == "no":
-            factor_money -= self.money_change
-            factor_happiness -= self.happiness_change
-            factor_opposition -= self.opposition_change
-            factor_army -= self.army_change
+
+        factor_money -= self.money_change
+        factor_happiness -= self.happiness_change
+        factor_opposition -= self.opposition_change
+        factor_army -= self.army_change
         return factor_money, factor_happiness, factor_opposition, factor_army

@@ -1,0 +1,16 @@
+After a triumph at the presidential elections you are now the president of the USA. As every respectable leader of a
+nation,you are very vocal on your Twitter account. However, what is more annoying than an open border between the USA
+and Mexico ? Fake News. You despise fake news. So instead of meeting with senators and diplomats all day you decide to
+isolate yourself in the round office and scroll down your Twitter feed and hunt down these horrible fake news.
+
+Throughout the course of this game, you will be presented with tweets. If you decide that the tweet is fake news or
+would harm the integrity of your country you denounce the tweet. If the tweet seems legit you can support the tweet.
+Each action you take will have an effect on the 4 main factors of your country. Judging by the nature of the tweet,
+these effects will be either positive or negative towards each factor. Try to predict what effect the tweets would have
+and plan accordingly. These 4 factors are : Money, Happiness, Opposition, and Army. If one of the factions reaches below
+a level 0 or above a level 100, the game is over.
+
+Your goal is to reach the next presidential elections with a Opposition of less than 50. The presidential elections will
+ automatically take place after 30 tweets.
+
+PRESS ENTER TO START THE GAME

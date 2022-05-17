@@ -44,9 +44,16 @@ class Menu:
         Method to start a new game from the main menu and run the game loop.
         """
         game_instance = Game(self.X, self.Y, self.main_menu)
+
+        # Displaying the tutorial
+
+        self.instructions()
+
+        
         # game loop
         while True:
             game_instance.game_loop(self.X, self.Y)
+
 
     @staticmethod
     def learn_more():
@@ -56,3 +63,20 @@ class Menu:
         request_url = urllib.request.urlopen(
             'https://docs.google.com/document/d/1BzQ7PH07unRiIMSIndmfJ2Iu9IIXOHgIvytI7JvgxHw/edit#heading=h.hwpaayxhxfw')
         print(request_url.read())
+
+    def instructions(self):
+        """
+        Method that will display the tutorial for the game.
+        """
+        BLACK = (0, 0, 0)
+        instructions_font = pygame.font.SysFont('Arial', 20)
+        white = (255, 255, 255)
+        self.surface.fill(white)
+
+        with open("gameInstructions.txt") as f:
+            for iterator, line in enumerate(f):
+                instruct_text = instructions_font.render(line, True, BLACK)
+                self.surface.blit(instruct_text,
+                                  (150, (150 - (instruct_text.get_height() / 2) + (20 * iterator))))
+                pygame.display.update()
+                time.sleep(6)

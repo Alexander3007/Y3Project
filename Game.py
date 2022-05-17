@@ -43,7 +43,7 @@ class Game:
         for i, j in data.iterrows():
             self.all_cards.append(Card(screen_width, screen_height, j[0], j[1], j[2], j[3], j[4], j[5]))
 
-        self.card_number = len(self.all_cards)
+        self.card_number = 30
 
         # randomize order of cards
         random.shuffle(self.all_cards)
@@ -115,6 +115,7 @@ class Game:
 
         # Fonts!
         button_font = pygame.font.SysFont('Corbel', 32)
+        small_font = pygame.font.SysFont('Corbel', 20)
 
         color_dark = (100, 100, 100)
         color_light = (170, 170, 170)
@@ -154,6 +155,10 @@ class Game:
 
         text = button_font.render('DENOUNCE', True, color_light)
         self.display_surface.blit(text, ((screen_width / 2) - (screen_width / 4) + 10, screen_height - 50 + 5))
+
+        # Round Timer
+        round_count = small_font.render("Elections in " + str(self.card_number-self.card_iterator-1), True, color_dark)
+        self.display_surface.blit(round_count, (75 + 4 * (screen_width / 5), screen_height/2))
 
     def check_game_over(self, screen_width, screen_height):
         """
@@ -208,7 +213,7 @@ class Game:
                                     screen_height)
 
         # Check if card maximum has been reached
-        if self.card_iterator > self.card_number - 2:
+        if self.card_iterator == self.card_number - 1:
             self.election_time(screen_width, screen_height)
 
     def activate_game_over(self, text, screen_width, screen_height):

@@ -77,6 +77,6 @@ class Menu:
             for iterator, line in enumerate(f):
                 instruct_text = instructions_font.render(line, True, BLACK)
                 self.surface.blit(instruct_text,
-                                  (150, (150 - (instruct_text.get_height() / 2) + (20 * iterator))))
+                                  (100, (150 - (instruct_text.get_height() / 2) + (20 * iterator))))
                 pygame.display.update()
-                time.sleep(6)
+                time.sleep(3)

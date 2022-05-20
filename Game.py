@@ -73,6 +73,7 @@ class Game:
                             self.factor_opposition,
                             self.factor_army)
                     self.card_iterator += 1
+                    self.notification()
 
                 # Support Action
                 if (screen_width / 2) + (screen_width / 4) - 200 <= mouse[0] <= (screen_width / 2) + (
@@ -85,6 +86,7 @@ class Game:
                             self.factor_opposition,
                             self.factor_army)
                     self.card_iterator += 1
+                    self.notification()
 
             # if event object type is QUIT
             # then quitting the pygame
@@ -102,7 +104,10 @@ class Game:
             card.update()
             pygame.display.update()
 
+
             self.check_game_over(screen_width, screen_height)
+
+
 
     def draw_game_objects(self, card, screen_width, screen_height):
         """
@@ -366,3 +371,9 @@ class Game:
 
             pygame.display.update()
             time.sleep(0.005)
+
+
+
+    def notification(self):
+        notification_sound = pygame.mixer.Sound("twitter_alert.mp3")
+        pygame.mixer.Sound.play(notification_sound)

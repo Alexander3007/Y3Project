@@ -38,10 +38,10 @@ class Game:
         # Import card data from excel file
         card_data = pd.read_excel(r'card_data.xlsx', engine='openpyxl')
 
-        data = pd.DataFrame(card_data, columns=['ID', 'money', 'happiness', 'opposition', 'army', 'fake'])
+        data = pd.DataFrame(card_data, columns=['ID', 'money', 'happiness', 'opposition', 'army', 'fake', 'is_checked'])
 
         for i, j in data.iterrows():
-            self.all_cards.append(Card(screen_width, screen_height, j[0], j[1], j[2], j[3], j[4], j[5]))
+            self.all_cards.append(Card(screen_width, screen_height, j[0], j[1], j[2], j[3], j[4], j[5],j[6]))
 
         self.card_number = 30
 
@@ -88,6 +88,19 @@ class Game:
                     self.card_iterator += 1
                     self.notification()
 
+                # Fake news detector
+                if 25 <= mouse[0] <= 225 and \
+                        (screen_height/2)-50 <= mouse[1] <= (screen_height/2)+50 and card.is_checked == "no":
+                    if card.is_fake == "yes":
+                        self.factor_happiness += 5
+                        self.factor_opposition -= 5
+
+                    else:
+                        self.factor_happiness -= 5
+                        self.factor_opposition += 5
+
+                    card.is_checked = "yes"
+
             # if event object type is QUIT
             # then quitting the pygame
             # and program both.
@@ -121,9 +134,12 @@ class Game:
         # Fonts!
         button_font = pygame.font.SysFont('Corbel', 32)
         small_font = pygame.font.SysFont('Corbel', 20)
+        extra_small_font = pygame.font.SysFont('Corbel', 14)
 
         color_dark = (100, 100, 100)
         color_light = (170, 170, 170)
+        color_red = (255, 25, 25)
+        color_green = (25, 255, 25)
         # completely fill the surface object
         # with white color
         self.display_surface.fill(white)
@@ -164,6 +180,21 @@ class Game:
         # Round Timer
         round_count = small_font.render("Elections in " + str(self.card_number-self.card_iterator-1), True, color_dark)
         self.display_surface.blit(round_count, (75 + 4 * (screen_width / 5), screen_height/2))
+
+        pygame.draw.rect(self.display_surface, color_light,
+                         [25, screen_height/2 - 10, 175, 40])
+
+        text = small_font.render('THIS IS FAKE NEWS!', True, color_red)
+        self.display_surface.blit(text, ((25), screen_height/2))
+
+        if card.is_checked == "yes":
+            if card.is_fake == "no":
+                text = extra_small_font.render("Sorry, this wasn't fake news!", True, color_red)
+                self.display_surface.blit(text, ((35), screen_height / 2 + 50))
+            else:
+                text = extra_small_font.render("Good guess! This is fake news.", True, color_green)
+                self.display_surface.blit(text, ((35), screen_height / 2 + 50))
+
 
     def check_game_over(self, screen_width, screen_height):
         """
@@ -327,6 +358,8 @@ class Game:
             pygame.display.update()
             time.sleep(4)
             self.menu.mainloop(self.display_surface)
+
+    # Utility Functions
 
     def fadeout(self, screen_width, screen_height, colour):
         """

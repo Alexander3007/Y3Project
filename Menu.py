@@ -3,6 +3,7 @@ import urllib.request
 
 import pygame
 import pygame_menu
+import webbrowser
 
 from Game import Game
 
@@ -60,14 +61,13 @@ class Menu:
         """
         Method that will bring the user to a page where they can learn more about fake news.
         """
-        request_url = urllib.request.urlopen(
-            'https://docs.google.com/document/d/1BzQ7PH07unRiIMSIndmfJ2Iu9IIXOHgIvytI7JvgxHw/edit#heading=h.hwpaayxhxfw')
-        print(request_url.read())
+        webbrowser.open('https://docs.google.com/document/d/1BzQ7PH07unRiIMSIndmfJ2Iu9IIXOHgIvytI7JvgxHw/edit#heading=h.hwpaayxhxfw')
 
     def instructions(self):
         """
         Method that will display the tutorial for the game.
         """
+
         BLACK = (0, 0, 0)
         instructions_font = pygame.font.SysFont('Arial', 20)
         white = (255, 255, 255)
@@ -77,6 +77,6 @@ class Menu:
             for iterator, line in enumerate(f):
                 instruct_text = instructions_font.render(line, True, BLACK)
                 self.surface.blit(instruct_text,
-                                  (100, (150 - (instruct_text.get_height() / 2) + (20 * iterator))))
-                pygame.display.update()
-                time.sleep(3)
+                                  (150, (150 - (instruct_text.get_height() / 2) + (20 * iterator))))
+            pygame.display.update()
+            time.sleep(2)

@@ -4,7 +4,7 @@ from Utility import resource_path
 
 class Card(pygame.sprite.Sprite):
     def __init__(self, display_width, display_height, ID, money_change, happiness_change, opposition_change,
-                 army_change, is_fake):
+                 army_change, is_fake, is_checked):
         """
         Initialization function for the cards, called when all the cards are created before the game starts.
         :param display_width: Game screen width
@@ -25,6 +25,7 @@ class Card(pygame.sprite.Sprite):
         self.happiness_change = happiness_change
         self.army_change = army_change
         self.is_fake = is_fake
+        self.is_checked = is_checked
 
         # Load the image
         #image_asset = resource_path(r'images/Cards/Card' + str(self.ID) + '.png')

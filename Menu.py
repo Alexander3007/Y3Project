@@ -1,5 +1,6 @@
 import time
 import urllib.request
+from moviepy.editor import *
 
 import pygame
 import pygame_menu
@@ -48,6 +49,7 @@ class Menu:
 
         # Displaying the tutorial
 
+
         self.instructions()
 
         
@@ -68,15 +70,25 @@ class Menu:
         Method that will display the tutorial for the game.
         """
 
+        self.play_video()
+
         BLACK = (0, 0, 0)
         instructions_font = pygame.font.SysFont('Arial', 20)
         white = (255, 255, 255)
         self.surface.fill(white)
 
+
+
         with open("gameInstructions.txt") as f:
             for iterator, line in enumerate(f):
                 instruct_text = instructions_font.render(line, True, BLACK)
                 self.surface.blit(instruct_text,
-                                  (150, (150 - (instruct_text.get_height() / 2) + (20 * iterator))))
+                                  (100, (150 - (instruct_text.get_height() / 2) + (20 * iterator))))
             pygame.display.update()
             time.sleep(2)
+
+        time.sleep(10)
+
+    def play_video(self):
+        clip = VideoFileClip('video.mp4').resize((1200,700))
+        clip.preview()

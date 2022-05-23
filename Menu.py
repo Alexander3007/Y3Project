@@ -20,15 +20,11 @@ class Menu:
         self.X = 1200
         self.Y = 700
         self.surface = pygame.display.set_mode((self.X, self.Y))
+        self.high_score = 0
 
         color_dark = (100, 100, 100)
         color_light = (170, 170, 170)
 
-        # Handles the sounds
-
-        # engine = sound.Sound()
-        # engine.set_sound(sound.SOUND_TYPE_CLICK_MOUSE, '/home/me/click.ogg')
-        # engine.set_sound(sound.SOUND_TYPE_OPEN_MENU, '/home/me/open.ogg')
 
         self.main_menu = pygame_menu.Menu('Tweeter', self.X, self.Y,
                                           theme=pygame_menu.themes.THEME_BLUE)
@@ -45,7 +41,8 @@ class Menu:
         """
         Method to start a new game from the main menu and run the game loop.
         """
-        game_instance = Game(self.X, self.Y, self.main_menu)
+        print(self.high_score)
+        game_instance = Game(self.X, self.Y, self.main_menu,self.high_score)
 
         # Displaying the tutorial
 
@@ -56,7 +53,6 @@ class Menu:
         # game loop
         while True:
             game_instance.game_loop(self.X, self.Y)
-
 
     @staticmethod
     def learn_more():
@@ -87,7 +83,7 @@ class Menu:
             pygame.display.update()
             time.sleep(2)
 
-        time.sleep(10)
+        time.sleep(1)
 
     def play_video(self):
         clip = VideoFileClip('video.mp4').resize((1200,700))

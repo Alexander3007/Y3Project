@@ -6,7 +6,7 @@ import time
 
 
 class Game:
-    def __init__(self, screen_width, screen_height, menu):
+    def __init__(self, screen_width, screen_height, menu, high_score):
         """
         Initialization method called whenever a new game is started from the main menu-
         :param screen_width: Game Screen Width
@@ -15,6 +15,8 @@ class Game:
         """
         self.menu = menu
         self.card_iterator = 0
+        self.session_score = 1
+        self.high_score = high_score
         white = (255, 255, 255)
 
         # Set initial values for factors
@@ -41,7 +43,7 @@ class Game:
         data = pd.DataFrame(card_data, columns=['ID', 'money', 'happiness', 'opposition', 'army', 'fake', 'is_checked'])
 
         for i, j in data.iterrows():
-            self.all_cards.append(Card(screen_width, screen_height, j[0], j[1], j[2], j[3], j[4], j[5],j[6]))
+            self.all_cards.append(Card(screen_width, screen_height, j[0], j[1], j[2], j[3], j[4], j[5], j[6]))
 
         self.card_number = 30
 
@@ -73,6 +75,7 @@ class Game:
                             self.factor_opposition,
                             self.factor_army)
                     self.card_iterator += 1
+                    self.session_score += 1
                     self.notification()
 
                 # Support Action
@@ -86,11 +89,12 @@ class Game:
                             self.factor_opposition,
                             self.factor_army)
                     self.card_iterator += 1
+                    self.session_score += 1
                     self.notification()
 
                 # Fake news detector
                 if 25 <= mouse[0] <= 225 and \
-                        (screen_height/2)-50 <= mouse[1] <= (screen_height/2)+50 and card.is_checked == "no":
+                        (screen_height / 2) - 50 <= mouse[1] <= (screen_height / 2) + 50 and card.is_checked == "no":
                     if card.is_fake == "yes":
                         self.factor_happiness += 5
                         self.factor_opposition -= 5
@@ -117,10 +121,7 @@ class Game:
             card.update()
             pygame.display.update()
 
-
             self.check_game_over(screen_width, screen_height)
-
-
 
     def draw_game_objects(self, card, screen_width, screen_height):
         """
@@ -178,14 +179,15 @@ class Game:
         self.display_surface.blit(text, ((screen_width / 2) - (screen_width / 4) + 10, screen_height - 50 + 5))
 
         # Round Timer
-        round_count = small_font.render("Elections in " + str(self.card_number-self.card_iterator-1), True, color_dark)
-        self.display_surface.blit(round_count, (75 + 4 * (screen_width / 5), screen_height/2))
+        round_count = small_font.render("Elections in " + str(self.card_number - self.card_iterator - 1), True,
+                                        color_dark)
+        self.display_surface.blit(round_count, (75 + 4 * (screen_width / 5), screen_height / 2))
 
         pygame.draw.rect(self.display_surface, color_light,
-                         [25, screen_height/2 - 10, 175, 40])
+                         [25, screen_height / 2 - 10, 175, 40])
 
         text = small_font.render('THIS IS FAKE NEWS!', True, color_red)
-        self.display_surface.blit(text, ((25), screen_height/2))
+        self.display_surface.blit(text, ((25), screen_height / 2))
 
         if card.is_checked == "yes":
             if card.is_fake == "no":
@@ -194,7 +196,6 @@ class Game:
             else:
                 text = extra_small_font.render("Good guess! This is fake news.", True, color_green)
                 self.display_surface.blit(text, ((35), screen_height / 2 + 50))
-
 
     def check_game_over(self, screen_width, screen_height):
         """
@@ -260,6 +261,10 @@ class Game:
         :param screen_width: Game screen width
         :param screen_height: Game screen height
         """
+
+        if self.session_score > self.high_score:
+            self.high_score = self.session_score
+
         red = (255, 0, 0)
         white = (255, 255, 255)
         self.fadeout(screen_width, screen_height, red)
@@ -273,20 +278,30 @@ class Game:
 
         game_over_text = big_font.render("GAME OVER", True, white)
         text = font.render(text, True, white)
+        session_score_text = big_font.render("Session Score: " + str(self.session_score), True, white)
+        high_score_text = big_font.render("High Score: " + str(self.high_score), True, white)
 
         # create a rectangular object for the
         # text surface object
         go_rect = game_over_text.get_rect()
         text_rect = text.get_rect()
+        session_rect = session_score_text.get_rect()
+        high_score_rect = high_score_text.get_rect()
 
         # set the center of the rectangular object.
         go_rect.center = (screen_width // 2, (screen_height // 2) - 100)
         text_rect.center = (screen_width // 2, screen_height // 2)
+        session_rect.center = (screen_width // 2, (screen_height // 2) + 100)
+        high_score_rect.center = (screen_width // 2, (screen_height // 2) + 200)
 
         self.display_surface.blit(game_over_text, go_rect)
         self.display_surface.blit(text, text_rect)
+        self.display_surface.blit(session_score_text, session_rect)
+        self.display_surface.blit(high_score_text, high_score_rect)
 
         pygame.display.update()
+        self.menu.high_score = self.high_score
+
         time.sleep(4)
         self.menu.mainloop(self.display_surface)
 
@@ -296,6 +311,9 @@ class Game:
         :param screen_width: Game screen width
         :param screen_height: Game screen height
         """
+        if self.session_score > self.high_score:
+            self.high_score = self.session_score
+
         blue = (0, 0, 128)
         white = (255, 255, 255)
         # here we can do end-of-game things!
@@ -331,7 +349,7 @@ class Game:
             time.sleep(4)
 
             # Start a new game
-            game_instance = Game(screen_width, screen_height, self.menu)
+            game_instance = Game(screen_width, screen_height, self.menu, self.high_score)
             # game loop
             while True:
                 game_instance.game_loop(screen_width, screen_height)
@@ -392,7 +410,7 @@ class Game:
             fadeout.set_alpha(i)
             self.display_surface.blit(fadeout, (0, 0))
 
-            font = pygame.font.SysFont('Corbel', 18)
+            font = pygame.font.SysFont('Corbel', 24)
             text = font.render("Loading...", True, black)
 
             # create a rectangular object for the
@@ -405,7 +423,10 @@ class Game:
             pygame.display.update()
             time.sleep(0.005)
 
-
+    def get_high_score(self):
+        return self.high_score
+    def get_session_score(self):
+        return self.session_score
 
     def notification(self):
         notification_sound = pygame.mixer.Sound("twitter_alert.mp3")

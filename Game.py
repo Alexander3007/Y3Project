@@ -13,10 +13,11 @@ class Game:
         :param screen_height: Game Screen Height
         :param menu: Pygame Menu object
         """
+        self.high_score = high_score
         self.menu = menu
         self.card_iterator = 0
         self.session_score = 1
-        self.high_score = high_score
+        #self.high_score = high_score
         white = (255, 255, 255)
 
         # Set initial values for factors
@@ -32,7 +33,9 @@ class Game:
         # set the pygame window name
         pygame.display.set_caption('The Game')
 
-        self.loading_screen_fadeout(screen_width, screen_height, white)
+        white = (255,255,255)
+        black = (0,0,0)
+        self.tips_screen(screen_width, screen_height, white, black)
 
         # Set the cards up!
         self.all_cards = []
@@ -300,7 +303,15 @@ class Game:
         self.display_surface.blit(high_score_text, high_score_rect)
 
         pygame.display.update()
-        self.menu.high_score = self.high_score
+
+        time.sleep(4)
+
+        pygame.display.update()
+
+        black = (0, 0, 0)
+        white = (255, 255, 255)
+
+        self.tips_screen(screen_width, screen_height, red, white)
 
         time.sleep(4)
         self.menu.mainloop(self.display_surface)
@@ -345,6 +356,19 @@ class Game:
             self.display_surface.blit(election_text, election_rect)
             self.display_surface.blit(text, text_rect)
 
+            session_score_text = big_font.render("Session Score: " + str(self.session_score), True, white)
+            high_score_text = big_font.render("High Score: " + str(self.high_score), True, white)
+
+            # create a rectangular object for the
+            session_rect = session_score_text.get_rect()
+            high_score_rect = high_score_text.get_rect()
+
+            session_rect.center = (screen_width // 2, (screen_height // 2) + 100)
+            high_score_rect.center = (screen_width // 2, (screen_height // 2) + 200)
+
+            self.display_surface.blit(session_score_text, session_rect)
+            self.display_surface.blit(high_score_text, high_score_rect)
+
             pygame.display.update()
             time.sleep(4)
 
@@ -373,6 +397,19 @@ class Game:
             self.display_surface.blit(election_text, election_rect)
             self.display_surface.blit(text, text_rect)
 
+            session_score_text = big_font.render("Session Score: " + str(self.session_score), True, white)
+            high_score_text = big_font.render("High Score: " + str(self.high_score), True, white)
+
+            # create a rectangular object for the
+            session_rect = session_score_text.get_rect()
+            high_score_rect = high_score_text.get_rect()
+
+            session_rect.center = (screen_width // 2, (screen_height // 2) + 100)
+            high_score_rect.center = (screen_width // 2, (screen_height // 2) + 200)
+
+            self.display_surface.blit(session_score_text, session_rect)
+            self.display_surface.blit(high_score_text, high_score_rect)
+
             pygame.display.update()
             time.sleep(4)
             self.menu.mainloop(self.display_surface)
@@ -392,6 +429,58 @@ class Game:
         for i in range(255):
             fadeout.set_alpha(i)
             self.display_surface.blit(fadeout, (0, 0))
+            pygame.display.update()
+            time.sleep(0.005)
+
+    def tips_screen(self, screen_width, screen_height, colour, text_colour):
+        """
+        Similar to the general fadeout method, but used specifically for displaying tips.
+        :param screen_width: Game screen width
+        :param screen_height: Game screen height
+        :param colour: Colour to fade out to
+        """
+
+        tips = [
+            "Check... Is there a URL given in the source? Does it seem reliable?",
+            "Look for spelling and grammatical errors!",
+            "Profile photos for fake news accounts are often parodied.",
+            "How many likes does the tweet have?",
+            "What's the username handle of the person tweeting? Does it seem legitimate?",
+            "Look out for verified badges!",
+            "Check the amount of background information given by the source!"
+
+        ]
+        fadeout = pygame.Surface((screen_width, screen_height))
+        fadeout = fadeout.convert()
+        fadeout.fill(colour)
+        black = (0, 0, 0)
+        white = (255, 255, 255)
+        chosen_tip = random.randint(0, len(tips)-1)
+        for i in range(255):
+            fadeout.set_alpha(i)
+            self.display_surface.blit(fadeout, (0, 0))
+            font = pygame.font.SysFont('Corbel', 24)
+            small_font = pygame.font.SysFont('Corbel', 18)
+
+            text = font.render("Loading...", True, text_colour)
+            # create a rectangular object for the
+            # text surface object
+            text_rect = text.get_rect()
+            text_rect.center = (screen_width // 2, screen_height // 2)
+
+            fadeout.blit(text, text_rect)
+
+
+            text = small_font.render("Fake news recognition tip: " + str(tips[chosen_tip]), True, text_colour)
+
+            # create a rectangular object for the
+            # text surface object
+            text_rect = text.get_rect()
+            text_rect.center = (screen_width // 2, (screen_height // 2)+50)
+
+            fadeout.blit(text, text_rect)
+
+
             pygame.display.update()
             time.sleep(0.005)
 
@@ -423,8 +512,6 @@ class Game:
             pygame.display.update()
             time.sleep(0.005)
 
-    def get_high_score(self):
-        return self.high_score
     def get_session_score(self):
         return self.session_score
 

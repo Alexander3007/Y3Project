@@ -1,6 +1,6 @@
 import time
 import urllib.request
-from moviepy.editor import *
+import moviepy.editor as mp
 
 import pygame
 import pygame_menu
@@ -21,10 +21,7 @@ class Menu:
         self.Y = 700
         self.surface = pygame.display.set_mode((self.X, self.Y))
         self.high_score = 0
-
-        color_dark = (100, 100, 100)
-        color_light = (170, 170, 170)
-
+        pygame.display.set_caption('The Game')
 
         self.main_menu = pygame_menu.Menu('Tweeter', self.X, self.Y,
                                           theme=pygame_menu.themes.THEME_BLUE)
@@ -41,18 +38,18 @@ class Menu:
         """
         Method to start a new game from the main menu and run the game loop.
         """
-        print(self.high_score)
         game_instance = Game(self.X, self.Y, self.main_menu,self.high_score)
 
         # Displaying the tutorial
 
-
         self.instructions()
 
-        
         # game loop
         while True:
             game_instance.game_loop(self.X, self.Y)
+
+            if(game_instance.get_session_score() + 1 > self.high_score):
+                self.high_score = game_instance.get_session_score() + 1
 
     @staticmethod
     def learn_more():
@@ -86,5 +83,9 @@ class Menu:
         time.sleep(1)
 
     def play_video(self):
-        clip = VideoFileClip('video.mp4').resize((1200,700))
+        pygame.display.set_caption('The Game')
+        clip = mp.VideoFileClip('video.mp4').resize((1200,700))
         clip.preview()
+
+    def get_highscore(self):
+        return(self.high_score)
